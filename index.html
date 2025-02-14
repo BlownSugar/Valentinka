@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a0f2e 0%, #31154c 50%, #451b52 100%);
+            font-family: 'Cormorant Garamond', serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        .content-wrapper {
+            position: relative;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .title {
+            font-size: 2.5em;
+            margin-bottom: 2em;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInTitle 2s ease forwards 0.5s;
+            text-shadow: 0 0 10px rgba(255, 182, 193, 0.8);
+        }
+
+        .start-button {
+            position: relative;
+            padding: 20px 60px;
+            font-size: 1.8em;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.5s;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            font-family: 'Cormorant Garamond', serif;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInButton 2s ease forwards 1.5s;
+        }
+
+        .start-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+            z-index: -1;
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(255, 182, 193, 0.4);
+        }
+
+        .start-button:hover::before {
+            left: 100%;
+        }
+
+        .magical-sparkles {
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .sparkle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleFloat var(--duration) linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translate(var(--startX), 100vh) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: var(--maxOpacity);
+            }
+            100% {
+                transform: translate(var(--endX), -100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .heart-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .trail-heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 182, 193, 0.6);
+            animation: trailFade 1s linear forwards;
+        }
+
+        @keyframes trailFade {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(var(--moveX), var(--moveY)) rotate(360deg) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInTitle {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInButton {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .love-quote {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            bottom: 2em;
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.7);
+            opacity: 0;
+            animation: fadeInQuote 2s ease forwards 2.5s;
+        }
+
+        @keyframes fadeInQuote {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+</head>
+<body>
+    <div class="magical-sparkles"></div>
+    <div class="content-wrapper">
+        <button class="start-button" onclick="handleStart()">Начать</button>
+    </div>
+    <div class="heart-trail"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="ambient.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Create sparkles effect
+        function createSparkles() {
+            const sparklesContainer = document.querySelector('.magical-sparkles');
+            
+            // Clear existing sparkles first
+            sparklesContainer.innerHTML = '';
+            
+            // Create more sparkles for better visibility
+            for (let i = 0; i < 100; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                
+                // Increase size range for better visibility
+                const size = Math.random() * 6 + 3; // 3-9px size range
+                sparkle.style.width = sparkle.style.height = size + 'px';
+                
+                // Randomize starting position across full width
+                sparkle.style.setProperty('--startX', Math.random() * window.innerWidth + 'px');
+                
+                // Increase movement range for more dynamic effect
+                sparkle.style.setProperty('--endX', (Math.random() - 0.5) * 800 + 'px');
+                
+                // Adjust duration and opacity for better visibility
+                sparkle.style.setProperty('--duration', (Math.random() * 2 + 2) + 's');
+                sparkle.style.setProperty('--maxOpacity', Math.random() * 0.7 + 0.3);
+                
+                sparklesContainer.appendChild(sparkle);
+                
+                // Recreate sparkle when animation ends for continuous effect
+                sparkle.addEventListener('animationend', () => {
+                    sparkle.remove();
+                    createSparkle();
+                });
+            }
+        }
+
+        // Function to create a single sparkle (for continuous effect)
+        function createSparkle() {
+            const sparklesContainer = document.querySelector('.magical-sparkles');
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            
+            const size = Math.random() * 6 + 3;
+            sparkle.style.width = sparkle.style.height = size + 'px';
+            sparkle.style.setProperty('--startX', Math.random() * window.innerWidth + 'px');
+            sparkle.style.setProperty('--endX', (Math.random() - 0.5) * 800 + 'px');
+            sparkle.style.setProperty('--duration', (Math.random() * 2 + 2) + 's');
+            sparkle.style.setProperty('--maxOpacity', Math.random() * 0.7 + 0.3);
+            
+            sparklesContainer.appendChild(sparkle);
+            
+            sparkle.addEventListener('animationend', () => {
+                sparkle.remove();
+                createSparkle();
+            });
+        }
+
+        // Create heart trail effect with increased frequency
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.6) { // Increased frequency (was 0.9)
+                const heart = document.createElement('div');
+                heart.className = 'trail-heart';
+                heart.innerHTML = '♥';
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                
+                // Increase movement range for more dynamic effect
+                heart.style.setProperty('--moveX', (Math.random() - 0.5) * 200 + 'px');
+                heart.style.setProperty('--moveY', (Math.random() + 0.5) * 150 + 'px');
+                
+                document.querySelector('.heart-trail').appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 1000);
+            }
+        });
+
+        // Improved music handling
+        async function initializeAudio() {
+            const bgMusic = document.getElementById('bgMusic');
+            
+            try {
+                await bgMusic.play();
+                console.log('Music started successfully');
+            } catch (error) {
+                console.log('Autoplay failed, waiting for user interaction:', error);
+                
+                // Add click event listener to start music
+                document.addEventListener('click', () => {
+                    bgMusic.play().catch(e => console.log('Playback failed:', e));
+                }, { once: true });
+            }
+        }
+
+        // Handle start button click
+        function handleStart() {
+            const button = document.querySelector('.start-button');
+            const content = document.querySelector('.content-wrapper');
+            
+            // Add fade-out effect
+            content.style.transition = 'opacity 1s';
+            content.style.opacity = '0';
+            
+            // Create celebration particles
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const rect = button.getBoundingClientRect();
+                    const heart = document.createElement('div');
+                    heart.className = 'trail-heart';
+                    heart.innerHTML = '♥';
+                    heart.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    heart.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                    heart.style.setProperty('--moveX', (Math.random() - 0.5) * 200 + 'px');
+                    heart.style.setProperty('--moveY', -Math.random() * 200 + 'px');
+                    document.querySelector('.heart-trail').appendChild(heart);
+                }, i * 30);
+            }
+
+            // Transition to next page
+            setTimeout(() => {
+                window.location.href = 'second.html';
+            }, 1500);
+        }
+
+        // Initialize everything when the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            createSparkles();
+            initializeAudio();
+            
+            // Recreate sparkles periodically to ensure continuous effect
+            setInterval(createSparkles, 10000);
+        });
+    </script>
+</body>
+</html>
