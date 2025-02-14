@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Proposal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Sixtyfour&display=swap" rel="stylesheet">
+    <svg style="position: absolute; width: 0; height: 0;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+</head>
+<body>
+    <div class="floating-hearts"></div>
+    
+    <div class="lyrics-container">
+        <p id="original-lyrics"></p>
+        <p id="translated-lyrics"></p>
+    </div>
+
+    <div class="valentine-card">
+        <div class="card">
+            <!-- Update the front div in your HTML -->
+            <div class="front">
+                <div class="magical-glow">
+                    <!-- Add individual heart elements -->
+                    <div class="heart1">♥</div>
+                    <div class="heart2">♥</div>
+                    <div class="heart3">♥</div>
+                </div>
+                <div class="crystal-heart">
+                    <div class="base"></div>
+                    <div class="facet"></div>
+                    <div class="highlight"></div>
+                </div>
+                <div class="message">Тык 👆</div>
+            </div>
+            <div class="back">
+                <div class="magical-glow"></div>
+                <div class="inner-content">
+                    <div class="valentine-text">
+                        <h2>My Dear Лизавета</h2>
+                    </div>
+                    
+                    <div class="content-area">
+                        <div class="image-space">
+                            <img src="lee.png" alt="Valentine">
+                        </div>
+                        <div class="pickup-line">
+                            <p>Don't make me bad</p>
+                            <p>make me bad</p>
+                            <p>I'm addicted to you</span></p>
+                            <p>TASTE (DANCERACHA)</p>
+                        </div>
+                    </div>
+
+                    <div class="valentine-question">Будешь моей валентинкой?</div>
+                    <div class="valentine-buttons">
+                        <button class="valentine-button yes-button" onclick="handleValentineResponse(true)">
+                            <span class="button-text">Да</span>
+                            <span class="button-hearts">♥♥♥</span>
+                        </button>
+                        <button class="valentine-button no-button" onclick="handleValentineResponse(false)">Нет</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="proposalMusic" autoplay>
+        <source src="proposal.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

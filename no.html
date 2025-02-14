@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oh no...</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #videoContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #playButton {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 1.2em;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        #playButton:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .error-message {
+            color: white;
+            text-align: center;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div id="videoContainer">
+        <video id="sadVideo" playsinline>
+            <source src="no.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <button id="playButton">Click to Start</button>
+    <div class="error-message">Error loading video</div>
+
+    <script>
+        const video = document.getElementById('sadVideo');
+        const playButton = document.getElementById('playButton');
+        const errorMessage = document.querySelector('.error-message');
+
+        // Preload the video
+        video.load();
+
+        playButton.addEventListener('click', () => {
+            // First try to play muted
+            video.muted = true;
+            video.play().then(() => {
+                // If successful, unmute and play again
+                video.muted = false;
+                video.play();
+                playButton.style.display = 'none';
+            }).catch(error => {
+                console.error('Error playing video:', error);
+                errorMessage.style.display = 'block';
+                playButton.style.display = 'none';
+            });
+        });
+
+        // Show error message if video fails to load
+        video.addEventListener('error', (e) => {
+            console.error('Error loading video:', video.error);
+            errorMessage.style.display = 'block';
+            playButton.style.display = 'none';
+        });
+
+        // Make sure video is visible
+        video.addEventListener('playing', () => {
+            video.style.visibility = 'visible';
+        });
+    </script>
+</body>
+</html>
